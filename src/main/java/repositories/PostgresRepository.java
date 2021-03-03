@@ -12,8 +12,8 @@ public class PostgresRepository implements IDBRepository {
     @Override
     public Connection getConnection() {
         try {
-            String connStr = "jdbc:postgresql://localhost:5432/idk";
-            return DriverManager.getConnection(connStr, "postgres", "123");
+            String connStr = "jdbc:postgresql://localhost:5432/Covid";
+            return DriverManager.getConnection(connStr, "postgres", "vfrfrf");
         } catch (SQLException ex) {
             throw new ServerErrorException("Cannot connect to DB: " + ex.getMessage(), Response.Status.INTERNAL_SERVER_ERROR);
         }
