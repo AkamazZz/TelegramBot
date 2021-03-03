@@ -121,7 +121,8 @@ public class BotController extends TelegramLongPollingBot {
             return covid.getTop();
         }
         if(lastMessage.equals("About you")){ // checking whether about you is written then call keyboard and add symptom
-            return addSymptom(msg);
+            addSymptom(msg);
+            return "Thank for your vote";
         }
         return "Напишите /start";
     }
