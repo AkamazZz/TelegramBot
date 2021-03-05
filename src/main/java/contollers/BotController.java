@@ -1,6 +1,7 @@
 package contollers;
 
 import domain.Covid;
+import domain.Serials;
 import domain.Symptom;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -16,6 +17,7 @@ public class BotController extends TelegramLongPollingBot {
     String lastMessage = ""; // global variable which will be used to check some messages
     SymptomRepository sr = new SymptomRepository(); // object related to symptom
     Covid covid = new Covid();
+    Serials serials = new Serials();
     ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
     @Override
     public void onUpdateReceived(Update update) { // Obtain update after which fix log in ID
@@ -34,7 +36,6 @@ public class BotController extends TelegramLongPollingBot {
         Symptom symptom = sr.addSymptom(sympName);
         return symptom;
     }
-
     public String getMessage(String msg){ // method which will works a receiver of message
         SendMessage answerMessage = new SendMessage();
         ArrayList<KeyboardRow> keyboard = new ArrayList<>(); // declairing list in order to create objects which will be exploited as rows of keyboard
@@ -52,7 +53,7 @@ public class BotController extends TelegramLongPollingBot {
             keyboard.clear();
             keyboardFirstRow.clear();
             keyboardFirstRow.add("Covid");
-            keyboardFirstRow.add("Anime");
+            keyboardFirstRow.add("Serials");
             keyboard.add(keyboardFirstRow);
             replyKeyboardMarkup.setKeyboard(keyboard);
             return "Choose:";
@@ -62,6 +63,7 @@ public class BotController extends TelegramLongPollingBot {
             keyboardFirstRow.clear();
             keyboardFirstRow.add("Statistics");
             keyboardFirstRow.add("About you");
+            keyboardSecondRow.add("Menu");
             keyboard.add(keyboardFirstRow);
             keyboard.add(keyboardSecondRow);
             keyboard.add(keyboardThirdRow);
@@ -69,14 +71,7 @@ public class BotController extends TelegramLongPollingBot {
             return "Choose:";
         }
         if(msg.equals("Serials")){
-            keyboard.clear();
-            keyboardFirstRow.clear();
-            keyboardFirstRow.add("Find");
-            keyboard.add(keyboardFirstRow);
-            keyboard.add(keyboardSecondRow);
-            keyboard.add(keyboardThirdRow);
-            replyKeyboardMarkup.setKeyboard(keyboard);
-            return "Choose:";
+            return serials.GetSerial();
         }
         if(msg.equals("About you")){
             lastMessage = msg; // check next inputed answer after about you in order to write data in DB
@@ -98,11 +93,9 @@ public class BotController extends TelegramLongPollingBot {
             return "Choose on of the symptomes of coronavirus you experienced";
         }
         if(lastMessage.equals("About you")){ // checking whether about you is written then call keyboard and add symptom
-            if(!msg.equals("Menu") || !msg.equals("Statistics") || !msg.equals("About you")) {
+            if(!msg.equals("Menu") && !msg.equals("Statistics") && !msg.equals("Among the earth") && !msg.equals("Kazakhstan")  && !msg.equals("Top 10")) {
                 addSymptom(msg); // copy that data to database
-                return "Thank for your vote";
-            }else{
-                return "Don't get sick!";
+                return "Thank for your answer";
             }
         }
         if(msg.equals("Statistics")){
