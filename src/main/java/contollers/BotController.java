@@ -9,17 +9,16 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMar
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import repositories.SymptomRepository;
-
 import java.util.ArrayList;
 
 public class BotController extends TelegramLongPollingBot {
     private long chat_id;
-    String lastMessage = "";
-    SymptomRepository sr = new SymptomRepository();
+    String lastMessage = ""; // global variable which will be used to check some messages
+    SymptomRepository sr = new SymptomRepository(); // object related to symptom
     Covid covid = new Covid();
     ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
     @Override
-    public void onUpdateReceived(Update update) {
+    public void onUpdateReceived(Update update) { // Obtain update after which fix log in ID
         update.getUpdateId();
         SendMessage sendMessage = new SendMessage().setChatId(update.getMessage().getChatId());
         chat_id = update.getMessage().getChatId();
@@ -31,15 +30,14 @@ public class BotController extends TelegramLongPollingBot {
             e.printStackTrace();
         }
     }
-    public String addSymptom(String sympName){
-        String symptom = sr.addSymptom(sympName);
-        return null;
+    public Symptom addSymptom(String sympName){
+        Symptom symptom = sr.addSymptom(sympName);
+        return symptom;
 
     }
-    public String getMessage(String msg){
-        SendMessage answerMessage = null;
-        answerMessage = new SendMessage();
-        ArrayList<KeyboardRow> keyboard = new ArrayList<>();
+    public String getMessage(String msg){ // method which will works a receiver of message
+        SendMessage answerMessage = new SendMessage();
+        ArrayList<KeyboardRow> keyboard = new ArrayList<>(); // declairing list in order to create objects which will be exploited as rows of keyboard
         KeyboardRow keyboardFirstRow = new KeyboardRow();
         KeyboardRow keyboardSecondRow = new KeyboardRow();
         KeyboardRow keyboardThirdRow = new KeyboardRow();
@@ -70,7 +68,7 @@ public class BotController extends TelegramLongPollingBot {
             replyKeyboardMarkup.setKeyboard(keyboard);
             return "Choose:";
         }
-        if(msg.equals("Anime")){
+        if(msg.equals("Serials")){
             keyboard.clear();
             keyboardFirstRow.clear();
             keyboardFirstRow.add("Find");
@@ -81,7 +79,7 @@ public class BotController extends TelegramLongPollingBot {
             return "Choose:";
         }
         if(msg.equals("About you")){
-            lastMessage = msg;
+            lastMessage = msg; // check next inputed answer after about you in order to write data in DB
             keyboard.clear();
             keyboardFirstRow.clear();
             keyboardFirstRow.add("Fever");
@@ -98,6 +96,14 @@ public class BotController extends TelegramLongPollingBot {
             keyboard.add(keyboardThirdRow);
             replyKeyboardMarkup.setKeyboard(keyboard);
             return "Choose on of the symptomes of coronavirus you experienced";
+        }
+        if(lastMessage.equals("About you")){ // checking whether about you is written then call keyboard and add symptom
+            if(!msg.equals("Menu") || !msg.equals("Statistics") || !msg.equals("About you")) {
+                addSymptom(msg); // copy that data to database
+                return "Thank for your vote";
+            }else{
+                return "Don't get sick!";
+            }
         }
         if(msg.equals("Statistics")){
             keyboard.clear();
@@ -120,21 +126,18 @@ public class BotController extends TelegramLongPollingBot {
         if(msg.equals("Top 10")){
             return covid.getTop();
         }
-        if(lastMessage.equals("About you")){ // checking whether about you is written then call keyboard and add symptom
-            addSymptom(msg);
-            return "Thank for your vote";
-        }
+
         return "Напишите /start";
     }
 
 
     @Override
-    public String getBotUsername() {
+    public String getBotUsername() { // tag name of bot
         return "AkmzZz_bot";
     }
 
     @Override
-    public String getBotToken() {
+    public String getBotToken() { // API KEY
         return "1607286204:AAEh9fCGXDsJdHlyFBs6az_bw8dhLd7MvcY";
     }
 }

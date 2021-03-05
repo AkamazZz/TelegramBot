@@ -24,7 +24,7 @@ public class Covid {
         }
         return document.title();
     }
-    public String getTop(){
+    public String getTop(){ // method to parse top 10 countries due to Covid
         try {
             document = Jsoup.connect("https://www.worldometers.info/coronavirus").get();
         }catch(IOException e){

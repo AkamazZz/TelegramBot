@@ -10,7 +10,7 @@ import java.sql.SQLException;
 
 public class PostgresRepository implements IDBRepository {
     @Override
-    public Connection getConnection() {
+    public Connection getConnection() { // constructor to create connection with bd
         try {
             String connStr = "jdbc:postgresql://localhost:5432/Covid";
             return DriverManager.getConnection(connStr, "postgres", "vfrfrf");
