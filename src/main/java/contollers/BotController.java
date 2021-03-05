@@ -33,8 +33,8 @@ public class BotController extends TelegramLongPollingBot {
     public Symptom addSymptom(String sympName){
         Symptom symptom = sr.addSymptom(sympName);
         return symptom;
-
     }
+
     public String getMessage(String msg){ // method which will works a receiver of message
         SendMessage answerMessage = new SendMessage();
         ArrayList<KeyboardRow> keyboard = new ArrayList<>(); // declairing list in order to create objects which will be exploited as rows of keyboard
