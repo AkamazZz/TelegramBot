@@ -54,6 +54,7 @@ public class BotController extends TelegramLongPollingBot {
             keyboardFirstRow.clear();
             keyboardFirstRow.add("Covid");
             keyboardFirstRow.add("Serials");
+            keyboardFirstRow.add("Currency");
             keyboard.add(keyboardFirstRow);
             replyKeyboardMarkup.setKeyboard(keyboard);
             return "Choose:";
@@ -72,6 +73,24 @@ public class BotController extends TelegramLongPollingBot {
         }
         if(msg.equals("Serials")){
             return serials.GetSerial();
+        }
+        if(msg.equals("Currency")){
+            lastMessage = msg;
+            for(int i=0; i<3;++i){
+                switch (i){
+                    case 0:
+                        return "Input quantity of cash";
+                    case 1:
+                        return "From currency";
+                    case 2:
+                        return "To currency";
+                }
+
+            }
+        }
+        if(lastMessage.equals("Currency")){
+            int value;
+            // add setter and getter for values and currencies for next time
         }
         if(msg.equals("About you")){
             lastMessage = msg; // check next inputed answer after about you in order to write data in DB
