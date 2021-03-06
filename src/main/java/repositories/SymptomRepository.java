@@ -24,4 +24,24 @@ public class SymptomRepository implements ISymptomRepository {
             throw new BadRequestException("Cannot run SQL statement: " + ex.getMessage());
         }
     }
+    @Override
+    public String getTopSymptom(){
+        try {
+
+            String get = "SELECT symptom,COUNT(symptom) AS \"value_occurrence\" FROM  people" +
+                    "GROUP BY symptom" +
+                    "ORDER BY value_occurrence DESC" +
+                    "LIMIT    1";
+            PreparedStatement ps = db.getConnection().prepareStatement(get);
+            ResultSet rs = ps.executeQuery(); // insert data into DB
+            if(rs.next()) {
+                String symptom = rs.getString("symptom");
+                String quantity = rs.getString("value_occurrence");
+                return "Mostly experienced symptom is " + symptom + " in quantity " + quantity ;
+            }
+            return " bruh ";
+        }catch (SQLException ex) {
+            throw new BadRequestException("Cannot run SQL statement: " + ex.getMessage());
+        }
+    }
 }

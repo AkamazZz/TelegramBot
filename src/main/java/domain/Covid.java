@@ -8,7 +8,7 @@ import java.io.IOException;
 
 public class Covid {
     private Document document;
-    public String getEarth(){
+    public String getEarth(){ // parse stat about covid around the world
         try {
             document = Jsoup.connect("https://www.worldometers.info/coronavirus").get();
         }catch(IOException e){

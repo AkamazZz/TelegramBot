@@ -1,5 +1,6 @@
 package contollers;
 
+import domain.ConvertCurrency;
 import domain.Covid;
 import domain.Serials;
 import domain.Symptom;
@@ -11,9 +12,11 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.Keyboard
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import repositories.SymptomRepository;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 public class BotController extends TelegramLongPollingBot {
     private long chat_id;
+
     String lastMessage = ""; // global variable which will be used to check some messages
     SymptomRepository sr = new SymptomRepository(); // object related to symptom
     Covid covid = new Covid();
@@ -32,6 +35,9 @@ public class BotController extends TelegramLongPollingBot {
             e.printStackTrace();
         }
     }
+    public String getTopSymptom(){
+        return sr.getTopSymptom();
+    }
     public Symptom addSymptom(String sympName){
         Symptom symptom = sr.addSymptom(sympName);
         return symptom;
@@ -42,9 +48,6 @@ public class BotController extends TelegramLongPollingBot {
         KeyboardRow keyboardFirstRow = new KeyboardRow();
         KeyboardRow keyboardSecondRow = new KeyboardRow();
         KeyboardRow keyboardThirdRow = new KeyboardRow();
-        KeyboardRow keyboardFourthRow = new KeyboardRow();
-        KeyboardRow keyboardFifthRow = new KeyboardRow();
-        KeyboardRow keyboardSixRow = new KeyboardRow();
         replyKeyboardMarkup.setSelective(true);
         replyKeyboardMarkup.setResizeKeyboard(true);
         replyKeyboardMarkup.setOneTimeKeyboard(false);
@@ -54,28 +57,49 @@ public class BotController extends TelegramLongPollingBot {
             keyboardFirstRow.clear();
             keyboardFirstRow.add("Covid");
             keyboardFirstRow.add("Serials");
-            keyboardFirstRow.add("Currency");
             keyboard.add(keyboardFirstRow);
-            replyKeyboardMarkup.setKeyboard(keyboard);
-            return "Choose:";
-        }
-        if(msg.equals("Covid")){
-            keyboard.clear();
-            keyboardFirstRow.clear();
-            keyboardFirstRow.add("Statistics");
-            keyboardFirstRow.add("About you");
-            keyboardSecondRow.add("Menu");
-            keyboard.add(keyboardFirstRow);
-            keyboard.add(keyboardSecondRow);
-            keyboard.add(keyboardThirdRow);
             replyKeyboardMarkup.setKeyboard(keyboard);
             return "Choose:";
         }
         if(msg.equals("Serials")){
             return serials.GetSerial();
         }
+       /* if(msg.equals("Currency")){   // For future development
+            for(int i=0; i<3;++i){
+                switch (i){
+                    case 0:
+                        String value = getMessage();
+                        convert.setValue(value);
+                        convert.getValue();
+                        break;
+                    case 1:
+                        String cur = String.valueOf(answerMessage);
+                        convert.setCurrency(cur);
+                        break;
+                    case 2:
+                        String cur2 = String.valueOf(answerMessage);
+                        convert.setCurrency2(cur2);
+                        break;
+                }
+
+            }
+            return "Input quantity of cash";
+        }
         if(msg.equals("Currency")){
             lastMessage = msg;
+            keyboard.clear();
+            keyboardFirstRow.clear();
+            keyboardFirstRow.add("50");
+            keyboardFirstRow.add("100");
+            keyboardFirstRow.add("200");
+            keyboardFirstRow.add("400");
+            keyboardSecondRow.add("500");
+            keyboardSecondRow.add("1000");
+            keyboardSecondRow.add("1500");
+            keyboardSecondRow.add("2000");
+            keyboard.add(keyboardFirstRow);
+            keyboard.add(keyboardSecondRow);
+            replyKeyboardMarkup.setKeyboard(keyboard);
             for(int i=0; i<3;++i){
                 switch (i){
                     case 0:
@@ -87,10 +111,60 @@ public class BotController extends TelegramLongPollingBot {
                 }
 
             }
+            return "Input quantity of cash";
         }
         if(lastMessage.equals("Currency")){
-            int value;
-            // add setter and getter for values and currencies for next time
+            lastMessage = msg;
+            keyboard.clear();
+            keyboardFirstRow.clear();
+            keyboardFirstRow.add("USD");
+            keyboardFirstRow.add("JPY");
+            keyboardFirstRow.add("CAD");
+            keyboardFirstRow.add("CNY");
+            keyboardSecondRow.add("RUB");
+            keyboardSecondRow.add("CZK");
+            keyboardSecondRow.add("GBP");
+            keyboardSecondRow.add("PLN");
+            keyboard.add(keyboardFirstRow);
+            keyboard.add(keyboardSecondRow);
+            replyKeyboardMarkup.setKeyboard(keyboard);
+            return "From currency";
+        }if(lastMessage.equals("Input quantity of cash")) {
+            lastMessage = msg;
+            keyboard.clear();
+            keyboardFirstRow.clear();
+            keyboardFirstRow.add("USD");
+            keyboardFirstRow.add("JPY");
+            keyboardFirstRow.add("CAD");
+            keyboardFirstRow.add("CNY");
+            keyboardSecondRow.add("RUB");
+            keyboardSecondRow.add("CZK");
+            keyboardSecondRow.add("GBP");
+            keyboardSecondRow.add("PLN");
+            keyboard.add(keyboardFirstRow);
+            keyboard.add(keyboardSecondRow);
+            replyKeyboardMarkup.setKeyboard(keyboard);
+            return "To currency";
+        }
+            if(lastMessage.equals("Input quantity of cash")){
+            convert.setValue(msg);
+            return convert.getValue();
+        }*/
+        if(msg.equals("Covid")){
+            keyboard.clear();
+            keyboardFirstRow.clear();
+            keyboardFirstRow.add("Statistics");
+            keyboardFirstRow.add("About you");
+            keyboardFirstRow.add("Frequent symptom");
+            keyboardSecondRow.add("Menu");
+            keyboard.add(keyboardFirstRow);
+            keyboard.add(keyboardSecondRow);
+            keyboard.add(keyboardThirdRow);
+            replyKeyboardMarkup.setKeyboard(keyboard);
+            return "What do you want to know?";
+        }
+        if(msg.equals("Frequent symptom")){
+            return getTopSymptom(); // since statistic is made we can obtain most popular symptom
         }
         if(msg.equals("About you")){
             lastMessage = msg; // check next inputed answer after about you in order to write data in DB
