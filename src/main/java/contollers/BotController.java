@@ -178,6 +178,7 @@ public class BotController extends TelegramLongPollingBot {
             keyboardThirdRow.add("Menu");
             keyboard.add(keyboardFirstRow);
             keyboard.add(keyboardSecondRow);
+            keyboard.add(keyboardThirdRow);
             replyKeyboardMarkup.setKeyboard(keyboard);
             return "Choose on of the symptomes of coronavirus you experienced";
         }
