@@ -1,6 +1,5 @@
 package contollers;
 
-import domain.ConvertCurrency;
 import domain.Covid;
 import domain.Serials;
 import domain.Symptom;
@@ -12,7 +11,6 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.Keyboard
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import repositories.SymptomRepository;
 import java.util.ArrayList;
-import java.util.Scanner;
 
 public class BotController extends TelegramLongPollingBot {
     private long chat_id;
@@ -21,9 +19,9 @@ public class BotController extends TelegramLongPollingBot {
     SymptomRepository sr = new SymptomRepository(); // object related to symptom
     Covid covid = new Covid();
     Serials serials = new Serials();
-    ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
+    ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup(); // keyboard
     @Override
-    public void onUpdateReceived(Update update) { // Obtain update after which fix log in ID
+    public void onUpdateReceived(Update update) { // after each message of user update and send message
         update.getUpdateId();
         SendMessage sendMessage = new SendMessage().setChatId(update.getMessage().getChatId());
         chat_id = update.getMessage().getChatId();
@@ -159,7 +157,6 @@ public class BotController extends TelegramLongPollingBot {
             keyboardSecondRow.add("Menu");
             keyboard.add(keyboardFirstRow);
             keyboard.add(keyboardSecondRow);
-            keyboard.add(keyboardThirdRow);
             replyKeyboardMarkup.setKeyboard(keyboard);
             return "What do you want to know?";
         }
@@ -181,7 +178,6 @@ public class BotController extends TelegramLongPollingBot {
             keyboardThirdRow.add("Menu");
             keyboard.add(keyboardFirstRow);
             keyboard.add(keyboardSecondRow);
-            keyboard.add(keyboardThirdRow);
             replyKeyboardMarkup.setKeyboard(keyboard);
             return "Choose on of the symptomes of coronavirus you experienced";
         }
@@ -220,12 +216,12 @@ public class BotController extends TelegramLongPollingBot {
     @Override
     public String getBotUsername() { // tag name of bot
         return "AkmzZz_bot";
-    }
+    } // tag of bot
 
     @Override
     public String getBotToken() { // API KEY
         return "1607286204:AAEh9fCGXDsJdHlyFBs6az_bw8dhLd7MvcY";
-    }
+    } // api key
 }
 
 

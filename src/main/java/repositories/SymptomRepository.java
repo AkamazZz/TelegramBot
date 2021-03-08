@@ -13,7 +13,7 @@ public class SymptomRepository implements ISymptomRepository {
     private IDBRepository db = new PostgresRepository(); // create ab object in order to have connection with db
 
     @Override
-    public Symptom addSymptom(String name) {
+    public Symptom addSymptom(String name) { // Add a new symptom depending on what user inputted
         try {
             String add = " insert into people(symptom) values ( ? )";
             PreparedStatement ps = db.getConnection().prepareStatement(add);
@@ -25,13 +25,10 @@ public class SymptomRepository implements ISymptomRepository {
         }
     }
     @Override
-    public String getTopSymptom(){
+    public String getTopSymptom(){ // obtain from added symptoms statistics
         try {
 
-            String get = "SELECT symptom,COUNT(symptom) AS \"value_occurrence\" FROM  people" +
-                    "GROUP BY symptom" +
-                    "ORDER BY value_occurrence DESC" +
-                    "LIMIT    1";
+            String get = "SELECT symptom,COUNT(symptom) AS \"value_occurrence\" FROM  people GROUP BY symptom ORDER BY value_occurrence DESC LIMIT    1";
             PreparedStatement ps = db.getConnection().prepareStatement(get);
             ResultSet rs = ps.executeQuery(); // insert data into DB
             if(rs.next()) {
@@ -39,7 +36,7 @@ public class SymptomRepository implements ISymptomRepository {
                 String quantity = rs.getString("value_occurrence");
                 return "Mostly experienced symptom is " + symptom + " in quantity " + quantity ;
             }
-            return " bruh ";
+            return null;
         }catch (SQLException ex) {
             throw new BadRequestException("Cannot run SQL statement: " + ex.getMessage());
         }
